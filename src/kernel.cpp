@@ -84,29 +84,3 @@ float kp_imq(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const 
 
     return (res);
 }
-
-arma::mat kmat_kgm(arma::mat &x, arma::mat &sx, arma::vec &x_map, arma::mat &linv, float s = 3.0, float beta = 0.5) {
-    int n = x.n_rows;
-    arma::mat kmat(n, n, arma::fill::zeros);
-
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            kmat(i, j) = kp_kgm(x.row(i).t(), x.row(j).t(), sx.row(i).t(), sx.row(j).t(), x_map, linv, s, beta);
-        }
-    }
-
-    return kmat;
-}
-
-arma::mat kmat_imq(arma::mat &x, arma::mat &sx, arma::mat &linv, float beta = 0.5) {
-    int n = x.n_rows;
-    arma::mat kmat(n, n, arma::fill::zeros);
-
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            kmat(i, j) = kp_imq(x.row(i).t(), x.row(j).t(), sx.row(i).t(), sx.row(j).t(), linv, beta);
-        }
-    }
-
-    return kmat;
-}
