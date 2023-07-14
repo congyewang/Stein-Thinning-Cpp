@@ -20,10 +20,10 @@ int main() {
 
     linv = make_precon(x, sx, "id");
 
-    res_kmat_imq = kmat(x, sx, linv, kp_imq, beta);
+    res_kmat_imq = kmat(x, sx, linv, vfk0_imq, beta);
     res_kmat_imq.print("res_kmat_kgm");
 
-    res_kmat_kgm = kmat(x, sx, x_map, linv, kp_kgm, s, beta);
+    res_kmat_kgm = kmat(x, sx, x_map, linv, vfk0_centkgm, s, beta);
     res_kmat_kgm.print("res_kmat_kgm");
 
     return 0;

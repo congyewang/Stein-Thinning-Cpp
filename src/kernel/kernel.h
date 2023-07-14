@@ -8,10 +8,10 @@
 #include <armadillo>
 #include "kmat.tpp"
 
-float kp_kgm(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map,
+float vfk0_centkgm(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map,
              const arma::mat &linv, float s = 3.0, float beta = 0.5);
 
-float kp_imq(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::mat &linv,
+float vfk0_imq(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::mat &linv,
              float beta = 0.5);
 
 double med2(const arma::mat& smp, int sz, int m);

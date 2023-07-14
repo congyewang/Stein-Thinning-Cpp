@@ -9,7 +9,7 @@
 #include <cmath>
 #include <stdexcept>
 
-float kp_kgm(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map,
+float vfk0_centkgm(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map,
              const arma::mat &linv, float s = 3.0, float beta = 0.5) {
     arma::vec kappa, dxkappa, dykappa, dxdykappa, c, dxc, dyc, dxdyc, kp;
     float res;
@@ -74,7 +74,7 @@ float kp_kgm(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const 
     return res;
 }
 
-float kp_imq(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::mat &linv,
+float vfk0_imq(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::mat &linv,
              float beta = 0.5) {
     arma::vec res1, res2, res3, res4, res5, res6, kp;
     res1 = 4 * beta * (beta + 1) * ((x - y).t() * arma::powmat(linv, 2) * (x - y));
