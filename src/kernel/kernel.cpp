@@ -3,6 +3,11 @@
 //
 
 #include <armadillo>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <cmath>
+#include <stdexcept>
 
 float kp_kgm(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map,
              const arma::mat &linv, float s = 3.0, float beta = 0.5) {
@@ -83,4 +88,63 @@ float kp_imq(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const 
     float res = kp[0];
 
     return (res);
+}
+
+double med2(const arma::mat& smp, int sz, int m) {
+    arma::mat sub;
+    if (sz > m) {
+        // Subsampling
+        sub.set_size(m, smp.n_cols);
+        for(int i = 0; i < m; ++i) {
+            sub.row(i) = smp.row(i * sz / m);
+        }
+    } else {
+        sub = smp;
+    }
+
+    // Compute pairwise distances and find median
+    std::vector<double> distances;
+    for(int i = 0; i < sub.n_rows; ++i) {
+        for(int j = i + 1; j < sub.n_rows; ++j) {
+            distances.push_back(arma::norm(sub.row(i) - sub.row(j), 2));
+        }
+    }
+
+    std::nth_element(distances.begin(), distances.begin() + distances.size() / 2, distances.end());
+    return std::pow(distances[distances.size() / 2], 2);
+}
+
+arma::mat make_precon(const arma::mat& smp, const arma::mat& scr, const std::string& pre = "id") {
+    // Sample size and dimension
+    int sz = smp.n_rows;
+    int dm = smp.n_cols;
+
+    // Select preconditioner
+    arma::mat linv;
+    int m = 1000;
+    if(pre == "id") {
+        linv = arma::eye(dm, dm);
+    } else if(pre == "med" || pre == "sclmed") {
+        double m2 = med2(smp, sz, m);
+        if(m2 == 0)
+            throw std::runtime_error("Too few unique samples in smp.");
+        if(pre == "med")
+            linv = arma::inv(m2 * arma::eye(dm, dm));
+        else if(pre == "sclmed")
+            linv = arma::inv((m2 / std::log(std::min(m, sz))) * arma::eye(dm, dm));
+    } else if(pre == "smpcov") {
+        arma::mat c = arma::cov(smp);  // Compute covariance matrix
+        arma::vec eigval = arma::eig_sym(c);
+        if(eigval.min() <= 0)
+            throw std::runtime_error("Too few unique samples in smp.");
+        linv = arma::inv(c);
+    } else {
+        try {
+            double preVal = std::stod(pre);
+            linv = arma::inv(preVal * arma::eye(dm, dm));
+        } catch(const std::invalid_argument& e) {
+            throw std::invalid_argument("Incorrect preconditioner string.");
+        }
+    }
+    return linv;
 }

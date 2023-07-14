@@ -14,6 +14,10 @@ float kp_kgm(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const 
 float kp_imq(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::mat &linv,
              float beta = 0.5);
 
+double med2(const arma::mat& smp, int sz, int m);
+
+arma::mat make_precon(const arma::mat& smp, const arma::mat& scr, const std::string& pre);
+
 template<typename KernelFunction>
 arma::mat kmat(arma::mat &x, arma::mat &sx, arma::vec &x_map, arma::mat &linv, KernelFunction kernel, float s, float beta);
 

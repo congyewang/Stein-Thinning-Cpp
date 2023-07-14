@@ -18,6 +18,8 @@ int main() {
     arma::mat::fixed<n, n> res_kmat_kgm;
     arma::mat::fixed<n, n> res_kmat_imq;
 
+    linv = make_precon(x, sx, "id");
+
     res_kmat_imq = kmat(x, sx, linv, kp_imq, beta);
     res_kmat_imq.print("res_kmat_kgm");
 
