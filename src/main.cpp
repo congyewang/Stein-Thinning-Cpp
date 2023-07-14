@@ -3,7 +3,7 @@
 //
 
 #include <armadillo>
-#include "kernel.h"
+#include "kernel/kernel.h"
 
 int main() {
     const int dim = 3;
