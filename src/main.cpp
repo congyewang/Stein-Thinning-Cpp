@@ -26,5 +26,10 @@ int main() {
     res_kmat_kgm = kmat(x, sx, x_map, linv, vfk0_centkgm, s, beta);
     res_kmat_kgm.print("res_kmat_kgm");
 
+    // Use MakeIMQ
+    Vfk0Imq make_imq(x, sx, "id");
+    float imq_result = make_imq(x, x, sx, sx);
+    std::cout << "Result of IMQ function: " << imq_result << std::endl;
+
     return 0;
 }

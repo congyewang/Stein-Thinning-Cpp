@@ -148,3 +148,54 @@ arma::mat make_precon(const arma::mat& smp, const arma::mat& scr, const std::str
     }
     return linv;
 }
+
+// Function Object for vfk0_imq
+class Vfk0Imq {
+public:
+    Vfk0Imq(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::mat &linv)
+            : x_(x), y_(y), sx_(sx), sy_(sy), linv_(linv) {}
+
+    float operator()(float beta = 0.5) const {
+        return vfk0_imq(x_, y_, sx_, sy_, linv_, beta);
+    }
+
+private:
+    arma::vec x_;
+    arma::vec y_;
+    arma::vec sx_;
+    arma::vec sy_;
+    arma::mat linv_;
+};
+
+// Function Object for vfk0_centkgm
+class Vfk0Centkgm {
+public:
+    Vfk0Centkgm(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map,
+                const arma::mat &linv, float s = 3.0)
+            : x_(x), y_(y), sx_(sx), sy_(sy), x_map_(x_map), linv_(linv), s_(s) {}
+
+    float operator()(float beta = 0.5) const {
+        return vfk0_centkgm(x_, y_, sx_, sy_, x_map_, linv_, s_, beta);
+    }
+
+private:
+    arma::vec x_;
+    arma::vec y_;
+    arma::vec sx_;
+    arma::vec sy_;
+    arma::vec x_map_;
+    arma::mat linv_;
+    float s_;
+};
+
+Vfk0Imq make_imq(const arma::mat& smp, const arma::mat& scr, const std::string& pre = "id") {
+    arma::mat linv = make_precon(smp, scr, pre);
+    // Here you can replace x, y, sx, sy with your own data
+    return Vfk0Imq(x, y, sx, sy, linv);
+}
+
+Vfk0Centkgm make_centkgm(const arma::mat& smp, const arma::mat& scr, const arma::vec& x_map, const std::string& pre = "id", float s = 3.0) {
+    arma::mat linv = make_precon(smp, scr, pre);
+    // Here you can replace x, y, sx, sy with your own data
+    return Vfk0Centkgm(x, y, sx, sy, x_map, linv, s);
+}
