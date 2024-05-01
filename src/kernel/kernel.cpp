@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 
-float vfk0_centkgm(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map,
-                   const arma::mat &linv, const int s = 3.0, const float beta = 0.5)
+double stein_kernel_centkgm(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map,
+                            const arma::mat &linv, const int s = 3.0, const float beta = 0.5)
 {
     arma::vec kappa, dxkappa, dykappa, dxdykappa, c, dxc, dyc, dxdyc, kp;
     float res;
@@ -74,8 +74,8 @@ float vfk0_centkgm(const arma::vec &x, const arma::vec &y, const arma::vec &sx, 
     return res;
 }
 
-float vfk0_imq(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::mat &linv,
-               const float beta = 0.5)
+double stein_kernel_imq(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::mat &linv,
+                        const float beta = 0.5)
 {
     arma::vec res1, res2, res3, res4, res5, res6, kp;
     res1 = 4 * beta * (beta + 1) * ((x - y).t() * arma::powmat(linv, 2) * (x - y));
@@ -174,9 +174,9 @@ std::function<float(const arma::vec &x, const arma::vec &y, const arma::vec &sx,
 
     arma::mat linv = make_precon(smp, scr, pre);
 
-    return [linv](const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map) -> float
+    return [linv](const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map) -> double
     {
-        return vfk0_centkgm(x, y, sx, sy, x_map, linv);
+        return stein_kernel_centkgm(x, y, sx, sy, x_map, linv);
     };
 }
 
@@ -186,8 +186,68 @@ std::function<float(const arma::vec &x, const arma::vec &y, const arma::vec &sx,
 
     arma::mat linv = make_precon(smp, scr, pre);
 
-    return [linv](const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy) -> float
+    return [linv](const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy) -> double
     {
-        return vfk0_imq(x, y, sx, sy, linv);
+        return stein_kernel_imq(x, y, sx, sy, linv);
     };
+}
+
+arma::vec vectorised_stein_kernel_centkgm(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy, const arma::vec &x_map)
+{
+    int n = x.n_rows;
+    arma::vec res_vec(n, arma::fill::zeros);
+
+    auto stein_kernel_centkgm_default = make_centkgm(x, sx, "id");
+
+    for (int i = 0; i < n; i++)
+    {
+        res_vec(i) = stein_kernel_centkgm_default(x.row(i).t(), y.row(i).t(), sx.row(i).t(), sy.row(i).t(), x_map);
+    }
+
+    return res_vec;
+}
+
+arma::vec vectorised_stein_kernel_imq(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy)
+{
+    int n = x.n_rows;
+    arma::vec res_vec(n, arma::fill::zeros);
+
+    auto stein_kernel_imq_default = make_imq(x, sx, "id");
+
+    for (int i = 0; i < n; i++)
+    {
+        res_vec(i) = stein_kernel_imq_default(x.row(i).t(), y.row(i).t(), sx.row(i).t(), sy.row(i).t());
+    }
+
+    return res_vec;
+}
+
+arma::vec vfps(const arma::mat &x_new, const arma::mat &sx_new, const arma::mat &x, const arma::mat &sx, const int i, const std::function<arma::vec(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy)> vfk0)
+{
+    arma::vec k0aa = vfk0(x_new, x_new, sx_new, sx_new);
+    int n_new = x_new.n_rows;
+
+    arma::mat a;
+    arma::mat b;
+    arma::mat sa;
+    arma::mat sb;
+    arma::mat k0ab;
+
+    arma::vec res;
+
+    if (i > 0)
+    {
+        a = arma::repmat(x_new, i, 1);
+        b = arma::repelem(x.rows(0, i - 1), n_new, 1);
+        sa = arma::repmat(sx_new, i, 1);
+        sb = arma::repelem(sx.rows(0, i - 1), n_new, 1);
+        k0ab = arma::reshape(vfk0(a, b, sa, sb), n_new, i).t();
+
+        res = arma::sum(k0ab, 0).t() * 2 + k0aa;
+    }
+    else
+    {
+        res = k0aa;
+    }
+    return res;
 }

@@ -14,28 +14,37 @@ int main()
 
     arma::mat::fixed<n, n> res_kmat_kgm;
     arma::mat::fixed<n, n> res_kmat_imq;
-    arma::mat::fixed<n, n> res_kmat_test;
 
     linv = make_precon(x, sx, "id");
 
-    res_kmat_imq = kmat(x, sx, linv, vfk0_imq, beta);
+    res_kmat_imq = kmat(x, sx, linv, stein_kernel_imq, beta);
 
-    res_kmat_kgm = kmat(x, sx, x_map, linv, vfk0_centkgm, s, beta);
+    res_kmat_kgm = kmat(x, sx, x_map, linv, stein_kernel_centkgm, s, beta);
 
     auto stein_kernel_imq = make_imq(x, sx, "id");
     auto stein_kernel_centkgm = make_centkgm(x, sx, "id");
 
-    arma::vec a = arma::randu<arma::vec>(dim);
-    arma::vec b = arma::randu<arma::vec>(dim);
-    arma::vec sa = arma::randu<arma::vec>(dim);
-    arma::vec sb = arma::randu<arma::vec>(dim);
 
-    float res_imq = stein_kernel_imq(a, b, sa, sb);
+    arma::mat::fixed<n, dim> a(arma::fill::randn);
+    arma::mat::fixed<n, dim> b(arma::fill::randn);
+    arma::mat::fixed<n, dim> sa(arma::fill::randn);
+    arma::mat::fixed<n, dim> sb(arma::fill::randn);
 
-    float res_centkgm = stein_kernel_centkgm(a, b, sa, sb, x_map);
+    arma::vec res_vec_centkgm;
+    arma::vec res_vec_imq;
 
-    res_kmat_test = kmat(x, sx, x_map, stein_kernel_centkgm);
-    res_kmat_test.print("res_kmat_test");
+    res_vec_centkgm = vectorised_stein_kernel_centkgm(a, b, sa, sb, x_map);
+
+    res_vec_imq = vectorised_stein_kernel_imq(a, b, sa, sb);
+
+    const int n_rand = 2;
+    arma::mat::fixed<n_rand, dim> x_new(arma::fill::randn);
+    arma::mat sx_new = -x_new;
+
+    arma::vec res_vfps;
+
+    res_vfps = vfps(x_new, sx_new, x, sx, 1, vectorised_stein_kernel_imq);
+    res_vfps.print("res_vfps:");
 
     return 0;
 }
