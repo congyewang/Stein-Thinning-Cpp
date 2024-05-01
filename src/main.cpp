@@ -30,7 +30,6 @@ int main()
     auto vfk0_imq = make_imq(x, sx, "id");
     auto vfk0_centkgm = make_centkgm(x, sx, "id");
 
-    // // 准备调用返回的函数的参数
     arma::vec a = arma::randu<arma::vec>(dim);
     arma::vec b = arma::randu<arma::vec>(dim);
     arma::vec sa = arma::randu<arma::vec>(dim);
