@@ -6,10 +6,12 @@ set(CMAKE_CXX_STANDARD 14)
 set(SOURCES
     src/kernel/kernel.cpp
     src/kernel/kmat.tpp
+    src/kernel/stein.cpp
     src/main.cpp
 )
 set(HEADERS
     src/kernel/kernel.h
+    src/kernel/stein.h
 )
 
 include_directories(include include/armadillo/include)

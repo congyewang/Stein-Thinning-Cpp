@@ -1,5 +1,6 @@
 #include <armadillo>
 #include "kernel/kernel.h"
+#include "kernel/stein.h"
 
 int main()
 {
