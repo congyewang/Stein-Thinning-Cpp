@@ -1,6 +1,3 @@
-//
-// Created by congye on 5/11/23.
-//
 #include <algorithm>
 #include <armadillo>
 #include <cmath>
@@ -10,7 +7,7 @@
 #include <vector>
 
 float vfk0_centkgm(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map,
-                   const arma::mat &linv, const float s = 3.0, const float beta = 0.5)
+                   const arma::mat &linv, const int s = 3.0, const float beta = 0.5)
 {
     arma::vec kappa, dxkappa, dykappa, dxdykappa, c, dxc, dyc, dxdyc, kp;
     float res;
@@ -171,26 +168,26 @@ arma::mat make_precon(const arma::mat &smp, const arma::mat &scr, const std::str
     return linv;
 }
 
-std::function<float(const arma::vec &, const arma::vec &, const arma::vec &, const arma::vec &, const float)> make_imq(
+std::function<float(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map)> make_centkgm(
     const arma::mat &smp, const arma::mat &scr, const std::string &pre = "id")
 {
 
     arma::mat linv = make_precon(smp, scr, pre);
 
-    return [linv](const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const float beta = 0.5) -> float
+    return [linv](const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map) -> float
     {
-        return vfk0_imq(x, y, sx, sy, linv, beta);
+        return vfk0_centkgm(x, y, sx, sy, x_map, linv);
     };
 }
 
-std::function<float(const arma::vec &, const arma::vec &, const arma::vec &, const arma::vec &, const arma::vec &, const float)> make_centkgm(
+std::function<float(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy)> make_imq(
     const arma::mat &smp, const arma::mat &scr, const std::string &pre = "id")
 {
 
     arma::mat linv = make_precon(smp, scr, pre);
 
-    return [linv](const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map, const float beta = 0.5) -> float
+    return [linv](const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy) -> float
     {
-        return vfk0_centkgm(x, y, sx, sy, x_map, linv, beta);
+        return vfk0_imq(x, y, sx, sy, linv);
     };
 }
