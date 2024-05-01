@@ -6,8 +6,6 @@ The Cpp version of Stein Thinning
 
 ```bash
 mkdir build && cd build
-
 cmake ..
-
-make .
+make
 ```
