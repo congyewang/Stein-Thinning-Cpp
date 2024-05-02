@@ -25,7 +25,6 @@ int main()
     auto stein_kernel_imq = make_imq(x, sx, "id");
     auto stein_kernel_centkgm = make_centkgm(x, sx, "id");
 
-
     arma::mat::fixed<n, dim> a(arma::fill::randn);
     arma::mat::fixed<n, dim> b(arma::fill::randn);
     arma::mat::fixed<n, dim> sa(arma::fill::randn);
@@ -42,10 +41,14 @@ int main()
     arma::mat::fixed<n_rand, dim> x_new(arma::fill::randn);
     arma::mat sx_new = -x_new;
 
-    arma::vec res_vfps;
+    arma::vec res_vfps_centkgm;
+    arma::vec res_vfps_imq;
 
-    res_vfps = vfps(x_new, sx_new, x, sx, 1, vectorised_stein_kernel_imq);
-    res_vfps.print("res_vfps:");
+    res_vfps_centkgm = vfps_centkgm(x_new, sx_new, x, sx, x_map, 1, vectorised_stein_kernel_centkgm);
+    res_vfps_centkgm.print("res_vfps_centkgm:");
+
+    res_vfps_imq = vfps_imq(x_new, sx_new, x, sx, 1, vectorised_stein_kernel_imq);
+    res_vfps_imq.print("res_vfps_imq:");
 
     return 0;
 }
