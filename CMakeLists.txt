@@ -17,9 +17,7 @@ set(HEADERS
     src/kernel/utils.h
 )
 
-include_directories(include include/armadillo/include)
-
-link_directories(include/armadillo/lib)
+include_directories(include/armadillo/include include/openblas/lib)
 
 aux_source_directory(src SRCS)
 

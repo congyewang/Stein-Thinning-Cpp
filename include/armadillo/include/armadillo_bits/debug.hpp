@@ -147,7 +147,7 @@ arma_stop_logic_error(const char* x, const char* y)
 
 
 
-//! print a message to get_cerr_stream() and throw logic_error exception
+//! print a message to get_cerr_stream() and throw out_of_range exception
 template<typename T1>
 arma_cold
 arma_noinline
@@ -263,8 +263,7 @@ arma_print(const T1& x, const T2& y, const T3& z)
 //
 // arma_sigprint
 
-//! print a message to the log stream with a preceding @ character.
-//! by default the log stream is cout.
+//! print a message to the cerr stream with a preceding @ character.
 //! used for printing the signature of a function
 //! (see the arma_extra_debug_sigprint macro) 
 inline
@@ -1424,6 +1423,7 @@ arma_assert_atlas_size(const T1& A, const T2& B)
         out << "@ arma_config::cxx14            = " << arma_config::cxx14            << '\n';
         out << "@ arma_config::cxx17            = " << arma_config::cxx17            << '\n';
         out << "@ arma_config::cxx20            = " << arma_config::cxx20            << '\n';
+        out << "@ arma_config::cxx23            = " << arma_config::cxx23            << '\n';
         out << "@ arma_config::std_mutex        = " << arma_config::std_mutex        << '\n';
         out << "@ arma_config::posix            = " << arma_config::posix            << '\n';
         out << "@ arma_config::openmp           = " << arma_config::openmp           << '\n';
@@ -1445,6 +1445,7 @@ arma_assert_atlas_size(const T1& A, const T2& B)
         out << "@ arma_config::optimise_invexpr = " << arma_config::optimise_invexpr << '\n';
         out << "@ arma_config::check_nonfinite  = " << arma_config::check_nonfinite  << '\n';
         out << "@ arma_config::zero_init        = " << arma_config::zero_init        << '\n';
+        out << "@ arma_config::fast_math        = " << arma_config::fast_math        << '\n';
         out << "@ sizeof(void*)    = " << sizeof(void*)    << '\n';
         out << "@ sizeof(int)      = " << sizeof(int)      << '\n';
         out << "@ sizeof(long)     = " << sizeof(long)     << '\n';
