@@ -3,6 +3,6 @@
 
 #include <armadillo>
 
-arma::uvec thin(const arma::mat &smp, const arma::mat &scr, const int m, const bool stnd = true,  const bool verb = false);
+arma::uvec thin(const arma::mat &smp, const arma::mat &scr, const int m, const bool stnd = true, const bool verb = false);
 
 #endif // MAIN_THINNING_H

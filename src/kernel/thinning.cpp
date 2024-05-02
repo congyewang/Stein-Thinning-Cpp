@@ -1,7 +1,7 @@
 #include <armadillo>
 #include "kernel.h"
 
-arma::uvec thin(const arma::mat &smp, const arma::mat &scr, const int m, const bool stnd = true,  const bool verb = false)
+arma::uvec thin(const arma::mat &smp, const arma::mat &scr, const int m, const bool stnd = true, const bool verb = false)
 {
     int n = smp.n_rows;
     int d = smp.n_cols;
@@ -24,7 +24,8 @@ arma::uvec thin(const arma::mat &smp, const arma::mat &scr, const int m, const b
     // // Populate columns of k0 as new points are selected
     k0.col(0) = vectorised_stein_kernel_imq(smp_copy, smp_copy, scr_copy, scr_copy);
     idx.row(0) = k0.col(0).index_min();
-    if (verb == true) std::cout << "THIN: 1 of " << m << std::endl;
+    if (verb == true)
+        std::cout << "THIN: 1 of " << m << std::endl;
 
     for (int i = 1; i < m; i++)
     {
@@ -33,7 +34,8 @@ arma::uvec thin(const arma::mat &smp, const arma::mat &scr, const int m, const b
         k0.col(i) = vectorised_stein_kernel_imq(smp_copy, smp_last, scr_copy, scr_last);
 
         idx.row(i) = (k0.col(0) + 2 * arma::sum(k0.cols(1, i), 1)).index_min();
-        if (verb == true) std::cout << "THIN: " << i + 1 << " of " << m << std::endl;
+        if (verb == true)
+            std::cout << "THIN: " << i + 1 << " of " << m << std::endl;
     }
 
     return idx;
