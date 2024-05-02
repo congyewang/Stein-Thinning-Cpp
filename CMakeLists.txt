@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(main CXX)
+project(stein_thinning CXX)
 
 set(CMAKE_CXX_STANDARD 14)
 set(SOURCES
