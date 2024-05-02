@@ -3,12 +3,13 @@
 
 #include <armadillo>
 #include "kmat.tpp"
+#include "stein.tpp"
 
 double stein_kernel_centkgm(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map,
-                   const arma::mat &linv, const int s = 3.0, const float beta = 0.5);
+                            const arma::mat &linv, const int s = 3.0, const float beta = 0.5);
 
 double stein_kernel_imq(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::mat &linv,
-               const float beta = 0.5);
+                        const float beta = 0.5);
 
 double med2(const arma::mat &smp, int sz, int m);
 
@@ -37,5 +38,15 @@ arma::vec vectorised_stein_kernel_centkgm(const arma::mat &x, const arma::mat &y
 arma::vec vectorised_stein_kernel_imq(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy);
 
 arma::vec vfps(const arma::mat &x_new, const arma::mat &sx_new, const arma::mat &x, const arma::mat &sx, const int i, std::function<arma::vec(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy)> vfk0);
+
+template <typename VFK0Func>
+arma::vec vfps(const arma::mat &x_new, const arma::mat &sx_new,
+               const arma::mat &x, const arma::mat &sx,
+               const arma::vec &x_map, const int i, VFK0Func vfk0);
+
+template <typename VFK0Func>
+arma::vec vfps(const arma::mat &x_new, const arma::mat &sx_new,
+               const arma::mat &x, const arma::mat &sx,
+               const int i, VFK0Func vfk0);
 
 #endif // MAIN_KERNEL_H

@@ -1,6 +1,5 @@
 #include <armadillo>
 #include "kernel/kernel.h"
-#include "kernel/stein.h"
 
 int main()
 {
@@ -44,10 +43,10 @@ int main()
     arma::vec res_vfps_centkgm;
     arma::vec res_vfps_imq;
 
-    res_vfps_centkgm = vfps_centkgm(x_new, sx_new, x, sx, x_map, 1, vectorised_stein_kernel_centkgm);
+    res_vfps_centkgm = vfps(x_new, sx_new, x, sx, x_map, 1, vectorised_stein_kernel_centkgm);
     res_vfps_centkgm.print("res_vfps_centkgm:");
 
-    res_vfps_imq = vfps_imq(x_new, sx_new, x, sx, 1, vectorised_stein_kernel_imq);
+    res_vfps_imq = vfps(x_new, sx_new, x, sx, 1, vectorised_stein_kernel_imq);
     res_vfps_imq.print("res_vfps_imq:");
 
     return 0;
