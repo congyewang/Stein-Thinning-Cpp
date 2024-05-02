@@ -49,6 +49,4 @@ arma::vec vfps(const arma::mat &x_new, const arma::mat &sx_new,
                const arma::mat &x, const arma::mat &sx,
                const int i, VFK0Func vfk0);
 
-arma::uvec thin(const arma::mat &smp, const arma::mat &scr, const int m, const bool stnd = true,  const bool verb = false);
-
 #endif // MAIN_KERNEL_H

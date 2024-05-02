@@ -7,10 +7,14 @@ set(SOURCES
     src/kernel/kernel.cpp
     src/kernel/kmat.tpp
     src/kernel/stein.tpp
+    src/kernel/thinning.cpp
+    src/kernel/utils.cpp
     src/main.cpp
 )
 set(HEADERS
     src/kernel/kernel.h
+    src/kernel/thinning.h
+    src/kernel/utils.h
 )
 
 include_directories(include include/armadillo/include)
