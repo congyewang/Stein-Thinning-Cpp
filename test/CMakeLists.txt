@@ -16,6 +16,10 @@ set(HEADERS
     ../src/kernel/thinning.h
     ../src/kernel/utils.h
 )
+set(OPENBLAS
+  ${CMAKE_SOURCE_DIR}/../include/openblas/lib/libopenblas.a
+
+)
 
 include_directories(../src)
 include_directories(../include/armadillo/include ../include/openblas/lib)
@@ -24,4 +28,5 @@ aux_source_directory(src SRCS)
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
-target_link_libraries(${PROJECT_NAME} libopenblas.a)
+target_link_libraries(${PROJECT_NAME} ${OPENBLAS})
+
