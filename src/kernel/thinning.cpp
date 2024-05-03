@@ -1,4 +1,5 @@
 #include <armadillo>
+#include <stdexcept>
 #include "kernel.h"
 
 arma::uvec thin(const arma::mat &smp, const arma::mat &scr, const int m, const bool stnd = true, const bool verb = false)
@@ -6,9 +7,31 @@ arma::uvec thin(const arma::mat &smp, const arma::mat &scr, const int m, const b
     int n = smp.n_rows;
     int d = smp.n_cols;
 
+    // Argument checks
+    if (n == 0 || d == 0)
+    {
+        throw std::invalid_argument("smp is empty.");
+    }
+
+    if (scr.n_rows != n || scr.n_cols != d)
+    {
+        throw std::invalid_argument("Dimensions of smp and scr are inconsistent.");
+    }
+
+    if (smp.has_nan() || scr.has_nan())
+    {
+        throw std::invalid_argument("smp or scr contains NaNs.");
+    }
+
+    if (smp.has_inf() || scr.has_inf())
+    {
+        throw std::invalid_argument("smp or scr contains infs.");
+    }
+
     arma::mat smp_copy = smp;
     arma::mat scr_copy = scr;
 
+    // Standardisation
     if (stnd == true)
     {
         arma::rowvec loc = arma::mean(smp_copy, 0);
