@@ -192,12 +192,12 @@ std::function<float(const arma::vec &x, const arma::vec &y, const arma::vec &sx,
     };
 }
 
-arma::vec vectorised_stein_kernel_centkgm(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy, const arma::vec &x_map)
+arma::vec vectorised_stein_kernel_centkgm(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy, const arma::vec &x_map, const std::string &pre = "id")
 {
     int n = x.n_rows;
     arma::vec res_vec(n, arma::fill::zeros);
 
-    auto stein_kernel_centkgm_default = make_centkgm(x, sx, "id");
+    auto stein_kernel_centkgm_default = make_centkgm(x, sx, pre);
 
     for (int i = 0; i < n; i++)
     {
@@ -207,12 +207,12 @@ arma::vec vectorised_stein_kernel_centkgm(const arma::mat &x, const arma::mat &y
     return res_vec;
 }
 
-arma::vec vectorised_stein_kernel_imq(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy)
+arma::vec vectorised_stein_kernel_imq(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy, const std::string &pre = "id")
 {
     int n = x.n_rows;
     arma::vec res_vec(n, arma::fill::zeros);
 
-    auto stein_kernel_imq_default = make_imq(x, sx, "id");
+    auto stein_kernel_imq_default = make_imq(x, sx, pre);
 
     for (int i = 0; i < n; i++)
     {

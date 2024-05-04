@@ -33,9 +33,9 @@ std::function<float(const arma::vec &x, const arma::vec &y, const arma::vec &sx,
 std::function<float(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy)> make_imq(
     const arma::mat &smp, const arma::mat &scr, const std::string &pre = "id");
 
-arma::vec vectorised_stein_kernel_centkgm(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy, const arma::vec &x_map);
+arma::vec vectorised_stein_kernel_centkgm(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy, const arma::vec &x_map, const std::string &pre = "id");
 
-arma::vec vectorised_stein_kernel_imq(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy);
+arma::vec vectorised_stein_kernel_imq(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy, const std::string &pre = "id");
 
 arma::vec vfps(const arma::mat &x_new, const arma::mat &sx_new, const arma::mat &x, const arma::mat &sx, const int i, std::function<arma::vec(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy)> vfk0);
 
