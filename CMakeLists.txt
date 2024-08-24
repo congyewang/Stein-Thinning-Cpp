@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(stein_thinning CXX)
+set(CMAKE_CXX_STANDARD 14)
 
 # Try to find out OpenBLAS
 find_package(BLAS)
@@ -72,7 +73,6 @@ else()
 
 endif()
 
-set(CMAKE_CXX_STANDARD 14)
 set(SOURCES
     src/kernel/kernel.cpp
     src/kernel/kmat.tpp
