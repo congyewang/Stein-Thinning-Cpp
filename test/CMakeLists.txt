@@ -1,5 +1,18 @@
 cmake_minimum_required(VERSION 3.10)
-project(test CXX)
+project(stein_thinning_test CXX)
+
+# GoogleTest requires at least C++14
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
 
 # Try to find out OpenBLAS
 find_package(BLAS)
@@ -72,7 +85,6 @@ else()
 
 endif()
 
-set(CMAKE_CXX_STANDARD 14)
 set(SOURCES
     ${PARENT_DIR}/src/kernel/kernel.cpp
     ${PARENT_DIR}/src/kernel/kmat.tpp
@@ -92,6 +104,10 @@ include_directories(${PARENT_DIR}/include/armadillo/include)
 
 aux_source_directory(src SRCS)
 
+enable_testing()
+
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
-target_link_libraries(${PROJECT_NAME} ${BLAS_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${BLAS_LIBRARIES} GTest::gtest_main)
+include(GoogleTest)
+gtest_discover_tests(${PROJECT_NAME})
