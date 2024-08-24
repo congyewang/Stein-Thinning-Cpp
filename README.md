@@ -2,6 +2,8 @@
 
 The C++ version of Stein Thinning.
 
+> `Riabiz, M., Chen, W. Y., Cockayne, J., Swietach, P., Niederer, S. A., Mackey, L., Oates, C. J. (2022). Optimal thinning of MCMC output. Journal of the Royal Statistical Society Series B: Statistical Methodology, 84(4), 1059-1081`.
+
 # Compilation
 
 ```bash
