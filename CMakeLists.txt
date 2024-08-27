@@ -74,19 +74,21 @@ else()
 endif()
 
 set(SOURCES
-    src/kernel/kernel.cpp
-    src/kernel/kmat.tpp
-    src/kernel/stein.tpp
-    src/kernel/thinning.cpp
-    src/kernel/utils.cpp
-    src/main.cpp
+    ${CMAKE_SOURCE_DIR}/src/kernel.cpp
+    ${CMAKE_SOURCE_DIR}/src/thinning.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils.cpp
+    ${CMAKE_SOURCE_DIR}/src/main.cpp
 )
 set(HEADERS
-    src/kernel/kernel.h
-    src/kernel/thinning.h
-    src/kernel/utils.h
+    ${CMAKE_SOURCE_DIR}/include/Stein-Thinning-Cpp/kernel.h
+    ${CMAKE_SOURCE_DIR}/include/Stein-Thinning-Cpp/thinning.h
+    ${CMAKE_SOURCE_DIR}/include/Stein-Thinning-Cpp/utils.h
+    ${CMAKE_SOURCE_DIR}/include/Stein-Thinning-Cpp/kmat.tpp
+    ${CMAKE_SOURCE_DIR}/include/Stein-Thinning-Cpp/stein.tpp
 )
 
+include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/include/Stein-Thinning-Cpp)
 include_directories(external/armadillo/include)
 
 aux_source_directory(src SRCS)

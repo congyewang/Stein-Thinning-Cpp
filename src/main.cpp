@@ -1,6 +1,6 @@
 #include <armadillo>
-#include "kernel/kernel.h"
-#include "kernel/thinning.h"
+#include "kernel.h"
+#include "thinning.h"
 
 int main(int argc, char **argv)
 {

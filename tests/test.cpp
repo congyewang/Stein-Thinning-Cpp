@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <armadillo>
-#include "kernel/kernel.h"
-#include "kernel/thinning.h"
+#include "kernel.h"
+#include "thinning.h"
 
 // Defining Test Cases
 TEST(ThinningTest, ThinningCorrectness)

@@ -86,20 +86,21 @@ else()
 endif()
 
 set(SOURCES
-    ${PARENT_DIR}/src/kernel/kernel.cpp
-    ${PARENT_DIR}/src/kernel/kmat.tpp
-    ${PARENT_DIR}/src/kernel/stein.tpp
-    ${PARENT_DIR}/src/kernel/thinning.cpp
-    ${PARENT_DIR}/src/kernel/utils.cpp
+    ${PARENT_DIR}/src/kernel.cpp
+    ${PARENT_DIR}/src/thinning.cpp
+    ${PARENT_DIR}/src/utils.cpp
     test.cpp
 )
 set(HEADERS
-    ${PARENT_DIR}/src/kernel/kernel.h
-    ${PARENT_DIR}/src/kernel/thinning.h
-    ${PARENT_DIR}/src/kernel/utils.h
+    ${PARENT_DIR}/include/Stein-Thinning-Cpp/kernel.h
+    ${PARENT_DIR}/include/Stein-Thinning-Cpp/thinning.h
+    ${PARENT_DIR}/include/Stein-Thinning-Cpp/utils.h
+    ${PARENT_DIR}/include/Stein-Thinning-Cpp/kmat.tpp
+    ${PARENT_DIR}/include/Stein-Thinning-Cpp/stein.tpp
 )
 
 include_directories(${PARENT_DIR}/src)
+include_directories(${PARENT_DIR}/include/Stein-Thinning-Cpp)
 include_directories(${PARENT_DIR}/external/armadillo/include)
 
 aux_source_directory(src SRCS)
