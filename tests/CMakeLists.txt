@@ -19,7 +19,7 @@ find_package(BLAS)
 
 # Search for OpenBLAS library files
 get_filename_component(PARENT_DIR ${CMAKE_SOURCE_DIR} DIRECTORY)
-set(OPENBLAS_LIB_DIR "${PARENT_DIR}/include/openblas/*/build/lib")
+set(OPENBLAS_LIB_DIR "${PARENT_DIR}/external/openblas/*/build/lib")
 file(GLOB OPENBLAS_LIB_FILES_A "${OPENBLAS_LIB_DIR}/libopenblas.a")
 file(GLOB OPENBLAS_LIB_FILES_SO "${OPENBLAS_LIB_DIR}/libopenblas.so")
 
@@ -37,7 +37,7 @@ else()
     # Set path and url of OpenBLAS
     set(OPENBLAS_VERSION "0.3.28")
     set(OPENBLAS_URL "https://github.com/OpenMathLib/OpenBLAS/releases/download/v${OPENBLAS_VERSION}/OpenBLAS-${OPENBLAS_VERSION}.tar.gz")
-    set(OPENBLAS_DIR "${PARENT_DIR}/include/openblas")
+    set(OPENBLAS_DIR "${PARENT_DIR}/external/openblas")
     set(OPENBLAS_SRC_DIR "${OPENBLAS_DIR}/OpenBLAS-${OPENBLAS_VERSION}")
     set(OPENBLAS_BUILD_DIR "${OPENBLAS_SRC_DIR}/build")
     set(OPENBLAS_LIB_DIR "${OPENBLAS_BUILD_DIR}/lib")
@@ -100,7 +100,7 @@ set(HEADERS
 )
 
 include_directories(${PARENT_DIR}/src)
-include_directories(${PARENT_DIR}/include/armadillo/include)
+include_directories(${PARENT_DIR}/external/armadillo/include)
 
 aux_source_directory(src SRCS)
 
