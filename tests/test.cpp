@@ -20,7 +20,7 @@ TEST(ThinningTest, ThinningCorrectness)
     ASSERT_TRUE(status_scr) << "Failed to load scr.csv";
 
     // Thinning
-    arma::uvec idx = thin(smp, scr, m);
+    arma::uvec idx = stein_thinning::thin(smp, scr, m);
 
     // Define gold_standard
     arma::uvec gold_standard = {

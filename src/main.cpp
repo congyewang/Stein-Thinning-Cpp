@@ -29,7 +29,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    arma::uvec idx = thin(smp, scr, m);
+    arma::uvec idx = stein_thinning::thin(smp, scr, m);
 
     std::string output_path = (argc == 5) ? argv[4] : "./output.csv";
     idx.save(arma::csv_name(output_path, arma::csv_opts::no_header));

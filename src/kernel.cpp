@@ -5,9 +5,10 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include "kernel.h"
 
-double stein_kernel_centkgm(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map,
-                            const arma::mat &linv, const int s = 3.0, const float beta = 0.5)
+double stein_thinning::kernel::stein_kernel_centkgm(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map,
+                                                    const arma::mat &linv, const int s, const float beta)
 {
     arma::vec kappa, dxkappa, dykappa, dxdykappa, c, dxc, dyc, dxdyc, kp;
     float res;
@@ -74,8 +75,8 @@ double stein_kernel_centkgm(const arma::vec &x, const arma::vec &y, const arma::
     return res;
 }
 
-double stein_kernel_imq(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::mat &linv,
-                        const float beta = 0.5)
+double stein_thinning::kernel::stein_kernel_imq(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::mat &linv,
+                                                const float beta)
 {
     arma::vec res1, res2, res3, res4, res5, res6, kp;
     res1 = 4 * beta * (beta + 1) * ((x - y).t() * arma::powmat(linv, 2) * (x - y));
@@ -91,7 +92,7 @@ double stein_kernel_imq(const arma::vec &x, const arma::vec &y, const arma::vec 
     return (res);
 }
 
-double med2(const arma::mat &smp, int sz, int m)
+double stein_thinning::kernel::med2(const arma::mat &smp, int sz, int m)
 {
     arma::mat sub;
     if (sz > m)
@@ -122,7 +123,7 @@ double med2(const arma::mat &smp, int sz, int m)
     return std::pow(distances[distances.size() / 2], 2);
 }
 
-arma::mat make_precon(const arma::mat &smp, const arma::mat &scr, const std::string &pre = "id")
+arma::mat stein_thinning::kernel::make_precon(const arma::mat &smp, const arma::mat &scr, const std::string &pre)
 {
     // Sample size and dimension
     int sz = smp.n_rows;
@@ -137,7 +138,7 @@ arma::mat make_precon(const arma::mat &smp, const arma::mat &scr, const std::str
     }
     else if (pre == "med" || pre == "sclmed")
     {
-        double m2 = med2(smp, sz, m);
+        double m2 = stein_thinning::kernel::med2(smp, sz, m);
         if (m2 == 0)
             throw std::runtime_error("Too few unique samples in smp.");
         if (pre == "med")
@@ -168,36 +169,36 @@ arma::mat make_precon(const arma::mat &smp, const arma::mat &scr, const std::str
     return linv;
 }
 
-std::function<float(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map)> make_centkgm(
-    const arma::mat &smp, const arma::mat &scr, const std::string &pre = "id")
+std::function<float(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map)> stein_thinning::kernel::make_centkgm(
+    const arma::mat &smp, const arma::mat &scr, const std::string &pre)
 {
 
-    arma::mat linv = make_precon(smp, scr, pre);
+    arma::mat linv = stein_thinning::kernel::make_precon(smp, scr, pre);
 
     return [linv](const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy, const arma::vec &x_map) -> double
     {
-        return stein_kernel_centkgm(x, y, sx, sy, x_map, linv);
+        return stein_thinning::kernel::stein_kernel_centkgm(x, y, sx, sy, x_map, linv);
     };
 }
 
-std::function<float(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy)> make_imq(
-    const arma::mat &smp, const arma::mat &scr, const std::string &pre = "id")
+std::function<float(const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy)> stein_thinning::kernel::make_imq(
+    const arma::mat &smp, const arma::mat &scr, const std::string &pre)
 {
 
-    arma::mat linv = make_precon(smp, scr, pre);
+    arma::mat linv = stein_thinning::kernel::make_precon(smp, scr, pre);
 
     return [linv](const arma::vec &x, const arma::vec &y, const arma::vec &sx, const arma::vec &sy) -> double
     {
-        return stein_kernel_imq(x, y, sx, sy, linv);
+        return stein_thinning::kernel::stein_kernel_imq(x, y, sx, sy, linv);
     };
 }
 
-arma::vec vectorised_stein_kernel_centkgm(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy, const arma::vec &x_map, const std::string &pre = "id")
+arma::vec stein_thinning::kernel::vectorised_stein_kernel_centkgm(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy, const arma::vec &x_map, const std::string &pre)
 {
     int n = x.n_rows;
     arma::vec res_vec(n, arma::fill::zeros);
 
-    auto stein_kernel_centkgm_default = make_centkgm(x, sx, pre);
+    auto stein_kernel_centkgm_default = stein_thinning::kernel::make_centkgm(x, sx, pre);
 
     for (int i = 0; i < n; i++)
     {
@@ -207,12 +208,12 @@ arma::vec vectorised_stein_kernel_centkgm(const arma::mat &x, const arma::mat &y
     return res_vec;
 }
 
-arma::vec vectorised_stein_kernel_imq(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy, const std::string &pre = "id")
+arma::vec stein_thinning::kernel::vectorised_stein_kernel_imq(const arma::mat &x, const arma::mat &y, const arma::mat &sx, const arma::mat &sy, const std::string &pre)
 {
     int n = x.n_rows;
     arma::vec res_vec(n, arma::fill::zeros);
 
-    auto stein_kernel_imq_default = make_imq(x, sx, pre);
+    auto stein_kernel_imq_default = stein_thinning::kernel::make_imq(x, sx, pre);
 
     for (int i = 0; i < n; i++)
     {

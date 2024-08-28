@@ -1,8 +1,9 @@
 #include <armadillo>
 #include "utils.h"
+#include "kernel.h"
 
 template <typename KernelFunction>
-arma::mat kmat(arma::mat &x, arma::mat &sx, arma::vec &x_map, arma::mat &linv, const KernelFunction kernel, const int s = 3, const float beta = 0.5)
+arma::mat stein_thinning::kmat(arma::mat &x, arma::mat &sx, arma::vec &x_map, arma::mat &linv, const KernelFunction kernel, const int s, const float beta)
 {
     int n = x.n_rows;
     arma::mat K(n, n, arma::fill::zeros);
@@ -14,12 +15,12 @@ arma::mat kmat(arma::mat &x, arma::mat &sx, arma::vec &x_map, arma::mat &linv, c
             K(i, j) = kernel(x.row(i).t(), x.row(j).t(), sx.row(i).t(), sx.row(j).t(), x_map, linv, s, beta);
         }
     }
-    mirror_lower(K);
+    stein_thinning::utils::mirror_lower(K);
     return K;
 }
 
 template <typename KernelFunction>
-arma::mat kmat(arma::mat &x, arma::mat &sx, arma::mat &linv, const KernelFunction kernel, const float beta = 0.5)
+arma::mat stein_thinning::kmat(arma::mat &x, arma::mat &sx, arma::mat &linv, const KernelFunction kernel, const float beta)
 {
     int n = x.n_rows;
     arma::mat K(n, n, arma::fill::zeros);
@@ -31,12 +32,12 @@ arma::mat kmat(arma::mat &x, arma::mat &sx, arma::mat &linv, const KernelFunctio
             K(i, j) = kernel(x.row(i).t(), x.row(j).t(), sx.row(i).t(), sx.row(j).t(), linv, beta);
         }
     }
-    mirror_lower(K);
+    stein_thinning::utils::mirror_lower(K);
     return K;
 }
 
 template <typename KernelFunction>
-arma::mat kmat(arma::mat &x, arma::mat &sx, arma::vec &x_map, const KernelFunction kernel)
+arma::mat stein_thinning::kmat(arma::mat &x, arma::mat &sx, arma::vec &x_map, const KernelFunction kernel)
 {
     int n = x.n_rows;
     arma::mat K(n, n, arma::fill::zeros);
@@ -48,12 +49,12 @@ arma::mat kmat(arma::mat &x, arma::mat &sx, arma::vec &x_map, const KernelFuncti
             K(i, j) = kernel(x.row(i).t(), x.row(j).t(), sx.row(i).t(), sx.row(j).t(), x_map);
         }
     }
-    mirror_lower(K);
+    stein_thinning::utils::mirror_lower(K);
     return K;
 }
 
 template <typename KernelFunction>
-arma::mat kmat(arma::mat &x, arma::mat &sx, const KernelFunction kernel)
+arma::mat stein_thinning::kmat(arma::mat &x, arma::mat &sx, const KernelFunction kernel)
 {
     int n = x.n_rows;
     arma::mat K(n, n, arma::fill::zeros);
@@ -65,6 +66,6 @@ arma::mat kmat(arma::mat &x, arma::mat &sx, const KernelFunction kernel)
             K(i, j) = kernel(x.row(i).t(), x.row(j).t(), sx.row(i).t(), sx.row(j).t());
         }
     }
-    mirror_lower(K);
+    stein_thinning::utils::mirror_lower(K);
     return K;
 }

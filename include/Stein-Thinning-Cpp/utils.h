@@ -3,6 +3,12 @@
 
 #include <armadillo>
 
-void mirror_lower(arma::mat &a);
+namespace stein_thinning
+{
+    namespace utils
+    {
+        void mirror_lower(arma::mat &a);
+    }
+}
 
 #endif // MAIN_UTILS_H

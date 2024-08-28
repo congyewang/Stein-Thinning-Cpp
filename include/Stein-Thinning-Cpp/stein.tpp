@@ -1,8 +1,9 @@
 #include <armadillo>
 #include <functional>
+#include "kernel.h"
 
 template <typename VFK0Func>
-arma::vec vfps(const arma::mat &x_new, const arma::mat &sx_new,
+arma::vec stein_thinning::vfps(const arma::mat &x_new, const arma::mat &sx_new,
                const arma::mat &x, const arma::mat &sx,
                const arma::vec &x_map, const int i, VFK0Func vfk0)
 {
@@ -35,7 +36,7 @@ arma::vec vfps(const arma::mat &x_new, const arma::mat &sx_new,
 }
 
 template <typename VFK0Func>
-arma::vec vfps(const arma::mat &x_new, const arma::mat &sx_new,
+arma::vec stein_thinning::vfps(const arma::mat &x_new, const arma::mat &sx_new,
                const arma::mat &x, const arma::mat &sx,
                const int i, VFK0Func vfk0)
 {

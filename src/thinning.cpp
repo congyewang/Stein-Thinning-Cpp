@@ -1,8 +1,9 @@
 #include <armadillo>
 #include <stdexcept>
 #include "kernel.h"
+#include "thinning.h"
 
-arma::uvec thin(const arma::mat &smp, const arma::mat &scr, const int m, const std::string &pre = "id", const bool stnd = true, const bool verb = false)
+arma::uvec stein_thinning::thin(const arma::mat &smp, const arma::mat &scr, const int m, const std::string &pre, const bool stnd, const bool verb)
 {
     int n = smp.n_rows;
     int d = smp.n_cols;
@@ -45,7 +46,7 @@ arma::uvec thin(const arma::mat &smp, const arma::mat &scr, const int m, const s
     arma::uvec idx(m, arma::fill::zeros);
 
     // // Populate columns of k0 as new points are selected
-    k0.col(0) = vectorised_stein_kernel_imq(smp_copy, smp_copy, scr_copy, scr_copy, pre);
+    k0.col(0) = stein_thinning::kernel::vectorised_stein_kernel_imq(smp_copy, smp_copy, scr_copy, scr_copy, pre);
     idx.row(0) = k0.col(0).index_min();
     if (verb == true)
         std::cout << "THIN: 1 of " << m << std::endl;
@@ -54,7 +55,7 @@ arma::uvec thin(const arma::mat &smp, const arma::mat &scr, const int m, const s
     {
         arma::mat smp_last = arma::repelem(smp_copy.row(idx.row(i - 1)[0]), n, 1);
         arma::mat scr_last = arma::repelem(scr_copy.row(idx.row(i - 1)[0]), n, 1);
-        k0.col(i) = vectorised_stein_kernel_imq(smp_copy, smp_last, scr_copy, scr_last);
+        k0.col(i) = stein_thinning::kernel::vectorised_stein_kernel_imq(smp_copy, smp_last, scr_copy, scr_last);
 
         idx.row(i) = (k0.col(0) + 2 * arma::sum(k0.cols(1, i), 1)).index_min();
         if (verb == true)

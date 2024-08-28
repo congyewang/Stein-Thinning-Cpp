@@ -1,6 +1,7 @@
 #include <armadillo>
+#include "utils.h"
 
-void mirror_lower(arma::mat &a)
+void stein_thinning::utils::mirror_lower(arma::mat &a)
 {
     int n = a.n_rows;
 
